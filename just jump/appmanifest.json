@@ -1,0 +1,10 @@
+{
+	"name": "无聊的跳跳跳",
+	"short_name": "无聊的跳跳跳",
+	"description": "",
+	"start_url": "index.html",
+	"display": "fullscreen",
+	"orientation": "any",
+	"background_color": "#ffffff",
+	"icons": []
+}
