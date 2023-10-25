@@ -1,0 +1,133 @@
+<!--
+ * @Author: Mcc
+ * @Date: 2023-10-20 14:23:38
+ * @LastEditors: mcc 550539422@qq.com
+ * @LastEditTime: 2023-10-24 10:49:02
+ * @FilePath: \books\videos.html
+ * @Description: 
+ * 
+ * Copyright (c) 2023 by Mcc, All Rights Reserved. 
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>三年级数学</title>
+    <meta name="viewport" content="width=100%; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+    <script src="js/jquery-1.10.2.js"></script>
+    <script type="text/javascript" src="js/swiper-3.4.0.jquery.min.js"></script>
+    <link rel="stylesheet" href="css/swiper-3.2.7.min.css" />
+    <link rel="stylesheet" href="./css/base.css">
+    <!-- import Vue before Element -->
+    <script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+    <!-- import JavaScript -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <!-- import CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+
+<body>
+    <div id="app">
+        <div class="container" style="border: none;">
+            <el-row :gutter="20" class="videosTop">
+                <el-col :span="3">
+                    <i class="el-icon-back" @click="backs()"></i>
+                </el-col>
+                <el-col :span="21">
+                    第{{nums}}讲-{{className}}
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col style="margin-bottom: 15px;" :span="12" v-for="(number, keci) in videosData" :key="keci">
+                    <el-card style="position: relative;">
+                        <div style="text-align: left;">
+                            <video :src="'./videos/'+ages+'ages/'+ages+'年级第'+nums+'讲例题'+(keci+1)+'.mp4'"
+                                style="width: 150px" controls
+                                controlslist="nodownload disablePictureInPicture noplaybackrate noremoteplayback"
+                                :id="'video-' + keci"></video>
+                            <div class="titles">第{{keci+1}}题</div>
+                        </div>
+                    </el-card>
+                </el-col>
+            </el-row>
+
+        </div>
+    </div>
+    <script src="./json/lessonsdata.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    videosData: "",
+                    ages: "",//年级
+                    nums: "",//课次
+                    pages: "",//页面数
+                    className: "",
+                }
+            },
+            created() {
+
+
+                const titleElement = document.querySelector('title');
+                const queryString = window.location.search;
+                const urlParams = new URLSearchParams(queryString);
+
+                const nums = urlParams.get('nums');
+                const className = urlParams.get('className');
+                const pages = urlParams.get('pages');
+                const ages = urlParams.get('ages');
+                if (nums == null || className == null || pages == null) {
+                    window.location = `./index.html?ages=${3}`
+                    return false;
+                }
+                titleElement.textContent = ages + '年级数学';
+                this.className = className;
+                this.pages = pages;
+                this.nums = nums;
+                this.ages = ages;
+                this.videosData = datalist[this.ages].datatotals[this.pages - 1].classNumber[this.nums - 1].classTimu
+
+                // 监听视频播放事件，暂停其他视频
+                const videos = document.querySelectorAll('video');
+                videos.forEach((video, index) => {
+                    video.addEventListener('play', () => {
+                        for (let i = 0; i < videos.length; i++) {
+                            if (i !== index) {
+                                videos[i].pause();
+                            }
+                        }
+                    });
+                });
+
+                // 2. 根据 ages 设置 swiper1 背景色
+                const videosTop = document.querySelector('.videosTop');
+                switch (ages) {
+                    case '3':
+                        videosTop.style.background = '#4FAFF2';
+                        break;
+                    case '4':
+                        videosTop.style.background = '#3EBD7D';
+                        break;
+                    case '5':
+                        videosTop.style.background = '#F56E6E';
+                        break;
+                    default:
+                        videosTop.style.background = '#B07FD3';
+                }
+
+
+            },
+            methods: {
+                backs() {
+                    window.location = `./index.html?ages=${this.ages}`
+                }
+            }
+        })
+
+    </script>
+
+</body>
+
+</html>
