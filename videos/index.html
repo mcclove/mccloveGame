@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>三年级数学</title>
+    <meta name="viewport" content="width=100%; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+    <script src="js/jquery-1.10.2.js"></script>
+    <script type="text/javascript" src="js/swiper-3.4.0.jquery.min.js"></script>
+    <link rel="stylesheet" href="css/swiper-3.2.7.min.css" />
+    <link rel="stylesheet" href="./css/base.css">
+    <!-- import Vue before Element -->
+    <script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+    <!-- import JavaScript -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <!-- import CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+
+<body style="overflow: hidden;">
+    <div id="app">
+        <div class="container">
+            <div class="swiper-container swiper1">
+                <div class="swiper-wrapper tops">
+                    <div v-for="(menu, index)  in menus" :key="menu"
+                        :class="{ 'swiper-slide': true, 'selected': index === pages }" @click="selectMenu(index)">
+                        {{ menu }}
+                    </div>
+                </div>
+            </div>
+            <!-- swiper2 -->
+            <div class="swiper-container swiper2">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide swiper-no-swiping scrollsHide" v-for="(item, index) in datalist.datatotals"
+                        :key="index">
+                        <el-row :gutter="20" style="padding: 10px;">
+                            <el-col style="margin-bottom: 10px;height: 199px;" :span="12"
+                                v-for="(number, keci) in item.classNumber" :key="keci">
+                                <el-link @click="gotovideos(keci,number.className)" :underline="false">
+                                    <el-card style="position: relative;">
+                                        <el-image :src="'./images/' +ages+'ages/'+ages+'年级第'+(index*10+keci+1)+'讲.png'"
+                                            class="image" fit="contain"></el-image>
+                                        <div style="text-align: left;">
+                                            <span class="titles">第{{index*10+keci+1}}讲</span>
+                                            <div class="bottomstxt">
+                                                {{ number.className }}
+                                            </div>
+                                        </div>
+                                    </el-card>
+                                </el-link>
+                            </el-col>
+                        </el-row>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./json/lessonsdata.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    ages: "",
+                    menus: "",
+                    pages: 0,
+                    datalist: ""
+                }
+            },
+            created() {
+                const titleElement = document.querySelector('title');
+                const queryString = window.location.search;
+                const urlParams = new URLSearchParams(queryString);
+                const ages = urlParams.get('ages');
+                if (ages == null) {
+                    window.location = `./index.html?ages=${3}`
+                    return false
+                }
+                this.ages = ages;
+                titleElement.textContent = ages + '年级数学';
+                this.datalist = datalist[ages]
+                this.menus = this.datalist.pages
+
+                // 2. 根据 ages 设置 swiper1 背景色
+                const swiper1 = document.querySelector('.swiper1');
+                switch (ages) {
+                    case '3':
+                        swiper1.style.background = '#4FAFF2';
+                        swiper1.classList.add('ages3');
+                        break;
+                    case '4':
+                        swiper1.style.background = '#3EBD7D';
+                        swiper1.classList.add('ages4');
+                        break;
+                    case '5':
+                        swiper1.style.background = '#F56E6E';
+                        swiper1.classList.add('ages5');
+                        break;
+                    default:
+                        swiper1.style.background = '#B07FD3';
+                        swiper1.classList.add('ages6');
+                }
+            },
+            methods: {
+                selectMenu(index) {
+                    for (let i = 0; i < this.menus.length; i++) {
+                        this.menus[i].selected = false;
+                    }
+                    this.menus[index].selected = true;
+                    this.pages = index;
+                },
+                gotovideos(nums, className) {
+                    window.location = `./videos.html?nums=${nums + 1}&className=${className}&pages=${this.pages + 1}&ages=${this.ages}`
+                }
+            }
+        })
+
+    </script>
+    <script src="js/base.js"></script>
+</body>
+
+</html>
